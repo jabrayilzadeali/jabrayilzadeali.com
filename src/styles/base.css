@@ -1,0 +1,15 @@
+/* The integration's default injected base.css file */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    .dark {
+        /* For hsl(198deg 93% 60% / <alpha-value>) */
+        --color-body: 212deg 32% 8%;
+    }
+    .light {
+        /* For hsl(198deg 93% 60% / <alpha-value>) */
+        --color-body: 0deg 0% 100%;
+    }
+}
