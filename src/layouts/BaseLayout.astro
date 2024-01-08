@@ -16,7 +16,7 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props
         <ViewTransitions />
     </head>
     <body class="bg-body">
-        <div class="flex flex-col h-screen container mx-auto px-4 text-zinc-800 dark:text-gray-300">
+        <div class="flex flex-col h-screen md:container md:mx-auto mx-auto px-4 text-zinc-800 dark:text-gray-300">
             <Header {title} classes="my-4" />
             <slot />
             <Footer classes="mt-auto my-4" />
