@@ -4,5 +4,21 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout>
-    Projects Here
+    <h1>Projects Here</h1>
+    <span>0</span>
+    <button class="self-start">increment</button>
 </BaseLayout>
+
+<script  type="module">
+    const button = document.querySelector("button")
+    const number = document.querySelector("span")
+    
+    console.log("wow")
+    button.addEventListener("click", () => {
+        let num = +number.innerText
+        num += 1
+        number.innerHTML = num
+
+    })
+
+</script>
