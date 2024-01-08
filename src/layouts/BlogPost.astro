@@ -8,17 +8,17 @@ type Props = CollectionEntry<"blog">["data"]
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout {title} {description}>
     <main>
-        <article>
-            <div class="hero-image">
+        <article class="prose prose-img:rounded-xl dark:prose-invert">
+            <div class="hero-stone">
                 {
                     heroImage && (
                         <img width={1020} height={510} src={heroImage} alt="" />
                     )
                 }
             </div>
-            <div class="prose">
+            <div class="">
                 <div class="title">
                     <div class="date">
                         <FormattedDate date={pubDate} />
@@ -39,38 +39,3 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props
         </article>
     </main>
 </BaseLayout>
-
-<!-- <html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-	</head>
-
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <img width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html> -->
