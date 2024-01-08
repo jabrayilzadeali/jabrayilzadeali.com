@@ -1,13 +1,12 @@
 ---
 import HeaderLink from './HeaderLink.astro';
-import { SITE_TITLE } from '../consts';
 import { Icon } from 'astro-icon/components'
 
 const { title, classes } = Astro.props
 ---
 
-<header class="mb-6">
-	<nav class="flex justify-between py-4">
+<header class:list={classes}>
+	<nav class="flex justify-between">
 		<h2><a class="" href="/">{title}</a></h2>
 		<div class="internal-links flex items-center">
 			<HeaderLink href="/">Home</HeaderLink>
