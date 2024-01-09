@@ -6,11 +6,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <BaseLayout>
     <h1>Projects Here</h1>
     <span>0</span>
-    <button class="self-start">increment</button>
+    <button data-increment class="self-start">increment</button>
 </BaseLayout>
 
-<script  type="module">
-    const button = document.querySelector("button")
+<script type="module">
+    const button = document.querySelector("[data-increment]")
     const number = document.querySelector("span")
     
     console.log("wow")

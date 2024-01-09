@@ -6,14 +6,21 @@ const { title, classes } = Astro.props
 ---
 
 <header class:list={classes}>
-	<nav class="flex justify-between">
+	<nav class="flex justify-between items-center">
 		<h2><a class="" href="/">{title}</a></h2>
 		<div class="internal-links flex items-center">
+
 			<HeaderLink href="/">Home</HeaderLink>
 			<Icon name="slash" width={20} height={20} />
 			<HeaderLink href="/projects">Projects</HeaderLink>
 			<Icon name="slash" width={20} height={20} />
 			<HeaderLink href="/blog">Blog</HeaderLink>
+			<Icon name="line" width={30} height={30} />
+			<!-- <Icon name="slash" width={20} height={20} /> -->
+			<button data-dark-light-mode-toggle>
+				<Icon name="dark" />
+				<Icon name="light" />
+			</button>
 			<!-- <HeaderLink href="/contact">Contact</HeaderLink> -->
 		</div>
 	</nav>

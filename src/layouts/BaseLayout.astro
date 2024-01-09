@@ -10,7 +10,7 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
     <head>
         <BaseHead {title} {description} />
         <ViewTransitions />
@@ -24,8 +24,6 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props
     </body>
 </html>
 
-<style>
-    body {
-        color: rgb(209, 213, 219);
-    }
-</style>
+<script>
+    import "../ts/darkModeSwitcher"
+</script>
