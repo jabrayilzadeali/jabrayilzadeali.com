@@ -22,7 +22,6 @@ document.addEventListener('astro:page-load', () => {
         }
     })
 
-    console.log(`localstorage.theme ${localStorage.theme}`)
     if (
         localStorage.theme === "dark" ||
         (!("theme" in localStorage) &&

@@ -13,12 +13,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     const button = document.querySelector("[data-increment]")
     const number = document.querySelector("span")
     
-    console.log("wow")
     button.addEventListener("click", () => {
         let num = +number.innerText
         num += 1
         number.innerHTML = num
 
     })
-
 </script>
