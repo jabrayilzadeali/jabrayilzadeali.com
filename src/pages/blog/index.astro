@@ -11,14 +11,15 @@ const posts = (await getCollection('blog')).sort(
 <BaseLayout>
 	<main>
 		<section>
-			<ul class="grid sm:grid-cols-2 gap-5">
+			<ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
 				{
 					posts.map((post) => (
 						<li>
 							<a href={`/blog/${post.slug}/`}>
 								<img width={720} height={360} src={post.data.heroImage} class="rounded-xl" alt="" />
-								<h4 class="title">{post.data.title}</h4>
-								<p class="date">
+
+								<h4 class="pt-4 text-xl font-bold">{post.data.title}</h4>
+								<p class="date pt-1 text-sm">
 									<FormattedDate date={post.data.pubDate} />
 								</p>
 							</a>

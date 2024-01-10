@@ -1,13 +1,41 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
+import { Icon } from 'astro-icon/components'
+
 ---
 
 <BaseLayout>
-    <main>
-        <h1 class="text-4xl mb-5">Hi, I'm Ali</h1>
-        <p class="">
-            Backend developer who is passionate about programming and solving
-            real world problems
-        </p>
-		</main>
+    <main class="mt-10">
+        <section class="border-l-slate-800 dark:border-l-slate-300 border-l-2 rounded-sm pl-2 max-w-md">
+            <!-- <p class="text-xl text-slate-100">Ali Jabrayilzade</p> -->
+            <p class="text-xl text-slate-400 font-bold max-w-fit py-1 rounded-xl">Ali Jabrayilzade</p>
+            <h1 class="text-slate-50 text-4xl font-bold">
+                I create magic with tech.
+            </h1>
+            <!-- <p class="text-slate-300">
+                Backend Developer who loves to bring ideas in to reality.
+            </p> -->
+            <div class="flex items-center">
+                <a class="flex" href="https://twitter.com/jabrayilzadeali" target="_blank">
+                    <span class="sr-only">Follow Jabrayilzade Ali on Twitter</span>
+                    <Icon name="x" width={15} height={15} />
+                    <!-- <span>X</span> -->
+                </a>
+                <Icon name="slash" width={30} height={45} />
+                <!-- <span>/</span> -->
+                <a class="flex" href="https://github.com/jabrayilzadeali" target="_blank">
+                    <span class="sr-only">Go to Jabrayilzade Ali's GitHub profile</span>
+                    <Icon name="github" width={22} height={22} />
+                    <!-- <span>Github</span> -->
+                </a>
+                <!-- <span>/</span> -->
+                <Icon name="slash" width={30} height={30} />
+                <a class="flex" href="https://www.linkedin.com/in/jabrayilzadeali/" target="_blank">
+                    <span class="sr-only">Go to Jabrayilzade Ali's Linkedin profile</span>
+                    <Icon name="linkedin" width={22} height={22} />
+                    <!-- <span>Github</span> -->
+                </a>
+            </div>
+        </section>
+    </main>
 </BaseLayout>
