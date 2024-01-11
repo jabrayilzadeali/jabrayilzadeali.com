@@ -3,26 +3,33 @@ import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+import Tags from '../../components/Tags.astro';
+
+
 const posts = (await getCollection('blog')).sort(
 	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
 );
+
+const all_tags: string[] = posts.flatMap((article) => article.data.tags)
 ---
 
 <BaseLayout>
 	<main>
 		<section>
+			<!-- {all_tags.map(tag => <Tags tags={tag} />)} -->
+			<!-- <Tags tags={all_tags} /> -->
 			<ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
 				{
 					posts.map((post) => (
-						<li>
+						<li class="">
 							<a href={`/blog/${post.slug}/`}>
 								<img width={720} height={360} src={post.data.heroImage} class="rounded-xl" alt="" />
-
 								<h4 class="pt-4 text-xl font-bold">{post.data.title}</h4>
-								<p class="date pt-1 text-sm">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
 							</a>
+							<p class="date pt-1 text-sm mb-2">
+								<FormattedDate date={post.data.pubDate} />
+							</p>
+							<Tags tags={post.data.tags} />
 						</li>
 					))
 				}
