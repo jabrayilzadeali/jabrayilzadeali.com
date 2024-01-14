@@ -8,10 +8,10 @@ interface Props {
 }
 ---
 
-<div class="flex gap-1">
+<div class="flex flex-wrap gap-2">
     {
         tags.map((tag: string, index: number) => (
-            <div>
+            <div class="my-1">
                 <a
                     class={`px-2 text-sm py-1 ${
                         index % 2 === 0
