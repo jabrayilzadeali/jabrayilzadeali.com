@@ -1,12 +1,10 @@
 ---
-import { getCollection } from "astro:content"
 import BaseLayout from "../../../layouts/BaseLayout.astro"
-
-import { Icon } from 'astro-icon/components'
-
-import FormattedDate from "../../../components/FormattedDate.astro"
 import Tags from "../../../components/Tags.astro"
-import { slugify } from "../../../utils"
+import FormattedDate from "../../../components/FormattedDate.astro"
+import { getCollection } from "astro:content"
+import { Icon } from 'astro-icon/components'
+import { slugify } from "../../../ts/utils"
 
 export async function getStaticPaths() {
     const allPosts = await getCollection("blog")
