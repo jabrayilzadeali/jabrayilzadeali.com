@@ -1,7 +1,7 @@
 ---
 const { tags } = Astro.props
 
-import { slugify, capitilize } from "../utils"
+import { slugify, beautify, capitilize } from "../utils"
 
 interface Props {
     tags: string[]
@@ -18,9 +18,9 @@ interface Props {
                             ? "text-stone-700 dark:text-stone-300 border-gray-800"
                             : "bg-gray-800 text-stone-300 dark:bg-gray-200 dark:text-stone-700 border-gray-800 dark:border-gray-200"
                     }  border rounded-lg`}
-                    href={`/articles/${slugify(tag)}`}
+                    href={`/blog/tags/${slugify(tag)}`}
                 >
-                    #{capitilize(tag)}
+                    #{beautify(slugify(tag))}
                 </a>
             </div>
         ))

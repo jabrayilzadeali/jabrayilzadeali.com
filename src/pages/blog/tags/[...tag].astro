@@ -1,35 +1,50 @@
 ---
 import { getCollection } from "astro:content"
-import FormattedDate from "../../components/FormattedDate.astro"
-import BaseLayout from "../../layouts/BaseLayout.astro"
+import BaseLayout from "../../../layouts/BaseLayout.astro"
 
-import Tags from "../../components/Tags.astro"
-import { slugify } from "../../utils"
+import { Icon } from 'astro-icon/components'
 
-const posts = (await getCollection("blog")).sort(
-    (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
-)
+import FormattedDate from "../../../components/FormattedDate.astro"
+import Tags from "../../../components/Tags.astro"
+import { slugify } from "../../../utils"
 
-const uniqueTags: string[] = [
-    ...new Set(posts.flatMap(article => article.data.tags.map(tag => slugify(tag)))),
-]
-// console.log(uniqueTags)
+export async function getStaticPaths() {
+    const allPosts = await getCollection("blog")
 
-// let tag_param = Astro.url.searchParams.get('tag')! || ""
-// console.log("---------------------the tag param: ", tag_param)
+    const uniqueTags = [
+        ...new Set(
+            allPosts.map(post => post.data.tags.map(tag => slugify(tag))).flat()
+        ),
+    ]
+    // console.log(uniqueTags)
 
-// const filtered_posts = tag_param !== "" ? posts.filter(post => post.data.tags.includes(tag_param)): posts
+    return uniqueTags.map(tag => {
+        // const filteredPosts = allPosts.filter(post =>
+        //     post.data.tags.includes(tag)
+        // )
 
-// console.log(posts)
-// console.log(new_posts)
+        const filteredPosts = allPosts.filter(post => 
+            post.data.tags.map(tag => slugify(tag)).flat().includes(tag)
+        )
+
+        return {
+            params: { tag },
+            props: { posts: filteredPosts },
+        }
+    })
+}
+
+const { tag } = Astro.params
+const { posts } = Astro.props
 ---
 
 <BaseLayout>
     <main>
         <section>
-            <div class="my-10">
-				<Tags tags={uniqueTags} />
-			</div>
+            <div class="my-10 gap-3 flex">
+                <Tags tags={[tag]} />
+                <a href="/blog" class="flex justify-center items-center gap-1"><Icon name="back" /> Back to Blog</a>
+            </div>
             <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {
                     posts.map(post => (
