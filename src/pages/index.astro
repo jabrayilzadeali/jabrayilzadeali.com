@@ -1,7 +1,18 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
+import FormattedDate from "../components/FormattedDate.astro"
 import { Icon } from 'astro-icon/components'
+import { slugify } from "../ts/utils"
+import { getCollection } from "astro:content"
+import Tags from "../components/Tags.astro"
 
+const posts = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3)
+
+const uniqueTags: string[] = [
+    ...new Set(posts.flatMap(article => article.data.tags.map(tag => slugify(tag)))),
+]
 ---
 
 <BaseLayout>
@@ -40,6 +51,39 @@ import { Icon } from 'astro-icon/components'
                     <!-- <span>Github</span> -->
                 </a>
             </div>
+        </section>
+        <!-- <section>
+            {
+                posts.map(post => (
+                    <div>
+                        <h1>{post.data.title}</h1>
+                        <p>{post.data.pubDate}</p>
+                        <hr>
+                    </div>
+                ))
+            }
+        </section> -->
+        <section>
+            <h1 class="text-4xl">Latest Posts</h1>
+            <ul class="flex flex-wrap sm:flex-col gap-5">
+                {posts.map(post => (
+                    <li class="grid sm:grid-cols-4 gap-5">
+                        <img
+                            src={post.data.heroImage}
+                            class="rounded-xl"
+                            alt=""
+                        />
+                        <div class="sm:col-span-3">
+                            <div class="flex flex-wrap justify-between items-center">
+                                <h1 class="text-xl text-bold">{post.data.title}</h1>
+                                <FormattedDate date={post.data.pubDate} />
+                            </div>
+                            <p class="text-sm">{post.data.description}</p>
+                            <Tags tags={post.data.tags} />
+                        </div>
+                    </li>
+                ))}
+            </ul>
         </section>
     </main>
 </BaseLayout>

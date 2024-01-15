@@ -1,7 +1,7 @@
 ---
 title: 'Second post some interesting and long title here'
 description: 'Lorem ipsum dolor sit amet'
-pubDate: 'Jul 22 2022'
+pubDate: 'Jan 03 2024'
 heroImage: '/blog-placeholder-4.jpg'
 tags: ['tAG      2                  hello           4']
 ---
