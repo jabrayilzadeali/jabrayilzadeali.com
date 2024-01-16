@@ -63,19 +63,21 @@ const uniqueTags: string[] = [
                 ))
             }
         </section> -->
-        <section>
-            <h1 class="text-4xl">Latest Posts</h1>
+        <section class="">
+            <h1 class="text-4xl my-5">Latest Posts</h1>
             <ul class="flex flex-wrap sm:flex-col gap-5">
                 {posts.map(post => (
-                    <li class="grid sm:grid-cols-4 gap-5">
-                        <img
-                            src={post.data.heroImage}
-                            class="rounded-xl"
-                            alt=""
-                        />
-                        <div class="sm:col-span-3">
-                            <div class="flex flex-wrap justify-between items-center">
-                                <h1 class="text-xl text-bold">{post.data.title}</h1>
+                    <li class="grid sm:grid-cols-3 md:grid-cols-4 gap-5">
+                        <div>
+                            <img
+                                src={post.data.heroImage}
+                                class="rounded-xl"
+                                alt=""
+                            />
+                        </div>
+                        <div class="grid sm:col-span-2 md:col-span-3 gap-3 items-center">
+                            <div class="flex flex-col gap-1 sm:flex-row flex-wrap justify-between sm:items-center">
+                                <h1 class="text-2xl text-bold">{post.data.title}</h1>
                                 <FormattedDate date={post.data.pubDate} />
                             </div>
                             <p class="text-sm">{post.data.description}</p>
