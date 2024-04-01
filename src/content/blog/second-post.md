@@ -1,6 +1,6 @@
 ---
 title: 'Second post some interesting and long title here'
-description: 'Lorem ipsum dolor sit amet'
+description: 'Some Interesting Some Interesting long description is here it is presented well okay cool long description is here it is presented well okay cool'
 pubDate: 'Jan 03 2024'
 heroImage: '/blog-placeholder-4.jpg'
 tags: ['tAG      2                  hello           4']
