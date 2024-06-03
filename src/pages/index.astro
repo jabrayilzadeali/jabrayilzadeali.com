@@ -11,6 +11,8 @@ const posts = (await getCollection("blog")).sort(
 ).slice(0, 3)
 
 
+
+
 const uniqueTags: string[] = [
     ...new Set(posts.flatMap(article => article.data.tags.map(tag => slugify(tag)))),
 ]
