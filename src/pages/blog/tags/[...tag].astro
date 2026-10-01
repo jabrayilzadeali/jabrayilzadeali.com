@@ -1,71 +1,43 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro"
-import Tags from "../../../components/Tags.astro"
-import FormattedDate from "../../../components/FormattedDate.astro"
 import { getCollection } from "astro:content"
-import { Icon } from 'astro-icon/components'
-import { slugify } from "../../../ts/utils"
+import { Icon } from "astro-icon/components"
+import BaseLayout from "../../../layouts/BaseLayout.astro"
+import PageHero from "../../../components/PageHero.astro"
+import PostCard from "../../../components/PostCard.astro"
+import { beautify, slugify } from "../../../ts/utils"
 
 export async function getStaticPaths() {
-    const allPosts = await getCollection("blog")
+    const allPosts = (await getCollection("blog")).sort(
+        (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+    )
+    const uniqueTags = [...new Set(allPosts.flatMap(post => post.data.tags.map(tag => slugify(tag))))]
 
-    const uniqueTags = [
-        ...new Set(
-            allPosts.map(post => post.data.tags.map(tag => slugify(tag))).flat()
-        ),
-    ]
-    // console.log(uniqueTags)
-
-    return uniqueTags.map(tag => {
-        // const filteredPosts = allPosts.filter(post =>
-        //     post.data.tags.includes(tag)
-        // )
-
-        const filteredPosts = allPosts.filter(post => 
-            post.data.tags.map(tag => slugify(tag)).flat().includes(tag)
-        )
-
-        return {
-            params: { tag },
-            props: { posts: filteredPosts },
-        }
-    })
+    return uniqueTags.map(tag => ({
+        params: { tag },
+        props: {
+            posts: allPosts.filter(post => post.data.tags.map(t => slugify(t)).includes(tag)),
+        },
+    }))
 }
 
 const { tag } = Astro.params
 const { posts } = Astro.props
 ---
 
-<BaseLayout>
+<BaseLayout title={`#${beautify(tag)} — Blog`}>
     <main>
-        <section>
-            <div class="my-10 gap-3 flex">
-                <Tags tags={[tag]} />
-                <a href="/blog" class="flex justify-center items-center gap-1"><Icon name="back" /> Back to Blog</a>
-            </div>
-            <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {
-                    posts.map(post => (
-                        <li class="">
-                            <a href={`/blog/${post.slug}/`}>
-                                <img
-                                    width={720}
-                                    height={360}
-                                    src={post.data.heroImage}
-                                    class="rounded-xl"
-                                    alt=""
-                                />
-                                <h4 class="pt-4 text-xl font-bold">
-                                    {post.data.title}
-                                </h4>
-                            </a>
-                            <p class="date pt-1 text-sm mb-2">
-                                <FormattedDate date={post.data.pubDate} />
-                            </p>
-                            <Tags tags={post.data.tags} />
-                        </li>
-                    ))
-                }
+        <PageHero
+            eyebrow={`Tag · ${posts.length} post${posts.length === 1 ? "" : "s"}`}
+            title={`#${beautify(tag)}`}
+        >
+            <a href="/blog" class="btn-ghost fade-in group mt-8" style="--delay: 400ms">
+                <Icon name="arrow-right" class="h-4 w-4 rotate-180 transition-transform duration-300 group-hover:-translate-x-1" />
+                All posts
+            </a>
+        </PageHero>
+        <section class="mx-auto max-w-6xl px-4 sm:px-6">
+            <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {posts.map((post, i) => <PostCard post={post} delay={(i % 3) * 100} />)}
             </ul>
         </section>
     </main>

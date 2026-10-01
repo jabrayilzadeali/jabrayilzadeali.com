@@ -1,109 +1,373 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro"
-import FormattedDate from "../components/FormattedDate.astro"
-import { Icon } from 'astro-icon/components'
-import { slugify } from "../ts/utils"
 import { getCollection } from "astro:content"
-import Tags from "../components/Tags.astro"
+import { Icon } from "astro-icon/components"
+import BaseLayout from "../layouts/BaseLayout.astro"
+import SectionHeading from "../components/SectionHeading.astro"
+import FormattedDate from "../components/FormattedDate.astro"
+import HeroScene from "../components/react/HeroScene"
+import SkillSphere from "../components/react/SkillSphere"
+import ProjectCard from "../components/react/ProjectCard"
+import { process, profile, projects, skillGroups, skills, socials } from "../data/site"
 
-const posts = (await getCollection("blog")).sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-).slice(0, 3)
+const posts = (await getCollection("blog"))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, 3)
 
-
-
-
-const uniqueTags: string[] = [
-    ...new Set(posts.flatMap(article => article.data.tags.map(tag => slugify(tag)))),
+const headline = [
+    { text: "I" },
+    { text: "create" },
+    { text: "magic", gradient: true },
+    { text: "with" },
+    { text: "tech." },
 ]
+
+const pillars = [
+    {
+        title: "APIs that scale",
+        text: "Clean, versioned, well-documented interfaces that other developers enjoy using.",
+        glyph: "{ }",
+    },
+    {
+        title: "Data first",
+        text: "Thoughtful schemas, fast queries and caching strategies that hold up under load.",
+        glyph: "⌘",
+    },
+    {
+        title: "Infra as craft",
+        text: "Containers, pipelines and observability — shipping should be boring and safe.",
+        glyph: "▲",
+    },
+    {
+        title: "Always learning",
+        text: "Writing about what I learn, and building weird things like this 3D site.",
+        glyph: "✦",
+    },
+]
+
+const marquee = [...skills, ...skills]
 ---
 
 <BaseLayout>
-    <main class="mt-10">
-        <section class="border-l-slate-800 dark:border-l-slate-300 border-l-2 rounded-sm pl-2 max-w-md">
-            <!-- <p class="text-xl text-slate-100">Ali Jabrayilzade</p> -->
-            <p>
+    <main>
+        <!-- ============ HERO ============ -->
+        <section class="relative h-[100svh] min-h-[640px] overflow-hidden">
+            <div class="bg-grid absolute inset-0" aria-hidden="true"></div>
+            <div
+                class="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-accent-violet/20 blur-[140px] md:left-2/3"
+                aria-hidden="true"
+            >
+            </div>
 
-                <span class="text-xl text-slate-600 dark:text-slate-300 max-w-fit py-1 rounded-xl">Ali Jabrayilzade</span>
-                <span class="">Backend Dev</span>
-            </p>
-            <h1 class="text-slate-950 dark:text-slate-50 text-4xl my-3 font-bold">
-                I create magic with tech.
-            </h1>
-            <!-- <p class="text-slate-300">
-                Backend Developer who loves to bring ideas in to reality.
-            </p> -->
-            <div class="flex items-center">
-                <a class="flex" href="https://twitter.com/jabrayilzadeali/" target="_blank">
-                    <span class="sr-only">Follow Jabrayilzade Ali on Twitter</span>
-                    <Icon name="x" width={15} height={15} />
-                    <!-- <span>X</span> -->
-                </a>
-                <Icon name="slash" width={30} height={45} />
-                <!-- <span>/</span> -->
-                <a class="flex" href="https://github.com/jabrayilzadeali/" target="_blank">
-                    <span class="sr-only">Go to Jabrayilzade Ali's GitHub profile</span>
-                    <Icon name="github" width={22} height={22} />
-                    <!-- <span>Github</span> -->
-                </a>
-                <!-- <span>/</span> -->
-                <Icon name="slash" width={30} height={30} />
-                <a class="flex" href="https://www.linkedin.com/in/jabrayilzadeali/" target="_blank">
-                    <span class="sr-only">Go to Jabrayilzade Ali's Linkedin profile</span>
-                    <Icon name="linkedin" width={22} height={22} />
-                    <!-- <span>Github</span> -->
-                </a>
+            <HeroScene client:only="react" />
+            <div
+                class="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-body via-body/80 to-transparent md:hidden"
+                aria-hidden="true"
+            >
+            </div>
+
+            <div
+                class="pointer-events-none relative z-10 mx-auto flex h-full max-w-6xl flex-col justify-end px-4 pb-28 sm:px-6 md:justify-center md:pb-0"
+            >
+                <div class="pointer-events-auto max-w-2xl">
+                    <p
+                        class="fade-in glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs text-muted"
+                        style="--delay: 100ms"
+                    >
+                        <span class="relative flex h-2 w-2">
+                            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                        </span>
+                        {profile.name} · {profile.role}
+                    </p>
+
+                    <h1
+                        class="mt-6 font-display text-[clamp(3rem,9vw,6.5rem)] font-bold leading-[0.95] tracking-tighter"
+                    >
+                        {
+                            headline.map((word, i) => (
+                                <>
+                                    <span class="split-word">
+                                        <span
+                                            class:list={[word.gradient && "text-gradient pr-1"]}
+                                            style={`--delay: ${250 + i * 90}ms`}
+                                        >
+                                            {word.text}
+                                        </span>
+                                    </span>{" "}
+                                </>
+                            ))
+                        }
+                    </h1>
+
+                    <p class="fade-in mt-6 max-w-lg text-base leading-relaxed text-muted sm:text-lg" style="--delay: 800ms">
+                        {profile.intro}
+                    </p>
+
+                    <div class="fade-in mt-9 flex flex-wrap items-center gap-3" style="--delay: 1000ms">
+                        <a href="#work" class="btn-primary group" data-magnetic="0.25">
+                            See my work
+                            <Icon name="arrow-right" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </a>
+                        <a href="/blog" class="btn-ghost" data-magnetic="0.25">Read the blog</a>
+                        <div class="ml-1 flex items-center gap-1">
+                            {
+                                socials.map(s => (
+                                    <a
+                                        href={s.href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        class="grid h-10 w-10 place-items-center rounded-full text-muted transition-colors hover:text-fg"
+                                    >
+                                        <span class="sr-only">{s.name}</span>
+                                        <Icon name={s.icon} class="h-[18px] w-[18px]" />
+                                    </a>
+                                ))
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a
+                href="#about"
+                class="fade-in absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-3 text-muted md:flex"
+                style="--delay: 1400ms"
+                aria-label="Scroll down"
+            >
+                <span class="flex h-9 w-5 justify-center rounded-full border border-line pt-2">
+                    <span class="h-1.5 w-1 animate-scroll-dot rounded-full bg-fg"></span>
+                </span>
+                <span class="font-mono text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+            </a>
+
+            <div class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-body to-transparent"></div>
+        </section>
+
+        <!-- ============ MARQUEE ============ -->
+        <section class="relative border-y border-line py-6" aria-label="Technologies">
+            <div class="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                <ul class="flex shrink-0 animate-marquee items-center gap-10 pr-10 hover:[animation-play-state:paused]">
+                    {
+                        marquee.map(skill => (
+                            <li class="flex items-center gap-10 whitespace-nowrap font-display text-2xl font-medium text-muted transition-colors hover:text-fg sm:text-3xl">
+                                {skill}
+                                <span class="text-base text-accent-violet">✦</span>
+                            </li>
+                        ))
+                    }
+                </ul>
             </div>
         </section>
-        <!-- <section>
-            {
-                posts.map(post => (
-                    <div>
-                        <h1>{post.data.title}</h1>
-                        <p>{post.data.pubDate}</p>
-                        <hr>
+
+        <!-- ============ ABOUT ============ -->
+        <section id="about" class="mx-auto max-w-6xl scroll-mt-24 px-4 pt-32 sm:px-6">
+            <div class="grid gap-16 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+                <SectionHeading index="01" eyebrow="About" title="Engineering the <span class='text-gradient'>invisible</span> parts of the web.">
+                    <p class="mt-6 text-lg leading-relaxed text-muted" data-reveal style="--delay: 200ms">
+                        Most of what I build you never see: the APIs, queues, databases and pipelines that make a product
+                        feel instant. I care about systems that are simple to reason about, pleasant to work on and boring
+                        to operate.
+                    </p>
+                    <p class="mt-4 text-lg leading-relaxed text-muted" data-reveal style="--delay: 300ms">
+                        When I'm not deep in a backend, I'm writing about it on the <a href="/blog" class="text-fg underline decoration-accent-violet underline-offset-4 hover:decoration-2">blog</a>
+                        or experimenting with things that glow.
+                    </p>
+                </SectionHeading>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    {
+                        pillars.map((p, i) => (
+                            <div
+                                class="spotlight group rounded-3xl border border-line bg-card/60 p-6 transition-all duration-500 hover:-translate-y-1 hover:border-accent-violet/40"
+                                data-reveal
+                                style={`--delay: ${i * 100}ms`}
+                            >
+                                <span class="grid h-11 w-11 place-items-center rounded-2xl border border-line bg-body font-mono text-sm text-accent-violet transition-transform duration-500 group-hover:rotate-[10deg] group-hover:scale-110">
+                                    {p.glyph}
+                                </span>
+                                <h3 class="mt-6 font-display text-lg font-semibold">{p.title}</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-muted">{p.text}</p>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ SKILLS ============ -->
+        <section id="skills" class="mx-auto max-w-6xl scroll-mt-24 px-4 pt-40 sm:px-6">
+            <div class="grid items-center gap-10 lg:grid-cols-2">
+                <div class="order-2 lg:order-1" data-reveal>
+                    <div class="relative mx-auto max-w-[520px]">
+                        <div class="absolute inset-[15%] rounded-full bg-accent-cyan/10 blur-3xl" aria-hidden="true"></div>
+                        <SkillSphere client:only="react" skills={skills} />
                     </div>
-                ))
-            }
-        </section> -->
-        <section class="">
-            <h1 class="text-4xl my-5">Latest Posts</h1>
-            <ul class="flex flex-col divide-y divide-gray-800">
-                {posts.map(post => (
-                    <li class="py-6">
-                        <div class="grid gap-4">
-                            <FormattedDate date={post.data.pubDate} />
-                            <div class="grid grid-cols-5 sm:grid-cols-3 gap-1 sm:gap-10">
-                                <div class="col-span-3 sm:col-span-2">
-                                    <a href={`/blog/${post.slug}/`}>
-                                        <h2 class="text-base sm:text-2xl min-w-36 font-bold text-zinc-950 dark:text-zinc-50">{post.data.title}</h1>
-                                        <p class="hidden sm:block text-sm py-3 pb-10">{post.data.description}</p>
-                                    </a>
-                                    <div class="hidden sm:flex justify-between align-center">
-                                        <Tags tags={post.data.tags} />
-                                        <Icon name="bookmark-outline" width={30} height={30} />
-                                    </div>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <SectionHeading index="02" eyebrow="Toolbox" title="The stack I reach for.">
+                        <p class="mt-6 text-lg text-muted" data-reveal style="--delay: 200ms">
+                            Move your cursor over the sphere to spin it. Tools change; fundamentals don't — but these are
+                            the ones I keep coming back to.
+                        </p>
+                    </SectionHeading>
+                    <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-8">
+                        {
+                            skillGroups.map((group, i) => (
+                                <div data-reveal style={`--delay: ${i * 100}ms`}>
+                                    <dt class="eyebrow">{group.title}</dt>
+                                    <dd class="mt-3 flex flex-wrap gap-2">
+                                        {group.items.map(item => (
+                                            <span class="chip">{item}</span>
+                                        ))}
+                                    </dd>
                                 </div>
-                                <div class="self-center col-span-2 sm:col-auto">
-                                    <a href={`/blog/${post.slug}/`}>
-                                        <img 
-                                            src={post.data.heroImage} 
-                                            class=" rounded-xl sm:max-w-52" 
-                                            alt="" 
-                                        />
-                                    </a>
-                                </div>
-                                  
-                            </div>
-                            <p class="sm:hidden line-clamp-2 text-sm my-3">{post.data.description}</p>
-                            <div class="sm:hidden flex justify-between align-center">
-                                <Tags tags={post.data.tags} />
-                                <Icon name="bookmark-outline" width={30} height={30} />
-                            </div>
+                            ))
+                        }
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ WORK ============ -->
+        <section id="work" class="mx-auto max-w-6xl scroll-mt-24 px-4 pt-40 sm:px-6">
+            <div class="flex flex-wrap items-end justify-between gap-6">
+                <SectionHeading index="03" eyebrow="Selected work" title="Things I've built." />
+                <a href="/projects" class="btn-ghost group" data-reveal>
+                    All projects
+                    <Icon name="arrow-right" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </a>
+            </div>
+            <div class="mt-14 grid gap-6 md:grid-cols-2">
+                {
+                    projects.slice(0, 4).map((project, i) => (
+                        <div data-reveal style={`--delay: ${(i % 2) * 120}ms`}>
+                            <ProjectCard client:visible project={project} index={i} />
                         </div>
-                    </li>
-                ))}
-            </ul>
+                    ))
+                }
+            </div>
+        </section>
+
+        <!-- ============ PROCESS ============ -->
+        <section id="process" class="mx-auto max-w-6xl scroll-mt-24 px-4 pt-40 sm:px-6">
+            <SectionHeading index="04" eyebrow="Process" title="How I work." />
+            <div class="relative mt-14">
+                <div
+                    class="absolute left-[11px] top-3 h-[calc(100%-1.5rem)] w-px bg-gradient-to-b from-accent-violet via-accent-cyan to-accent-pink md:left-0 md:top-[11px] md:h-px md:w-full md:bg-gradient-to-r"
+                    aria-hidden="true"
+                >
+                </div>
+                <ol class="relative grid gap-10 md:grid-cols-4 md:gap-6">
+                {
+                    process.map((item, i) => (
+                        <li class="relative pl-10 md:pl-0 md:pt-12" data-reveal style={`--delay: ${i * 120}ms`}>
+                            <span class="absolute left-0 top-0 grid h-6 w-6 place-items-center rounded-full border border-line bg-body">
+                                <span class="h-2 w-2 rounded-full bg-accent-violet shadow-[0_0_12px_2px_rgba(139,92,246,0.8)]" />
+                            </span>
+                            <span class="font-mono text-xs text-muted">{item.step}</span>
+                            <h3 class="mt-2 font-display text-2xl font-semibold">{item.title}</h3>
+                            <p class="mt-3 text-sm leading-relaxed text-muted">{item.text}</p>
+                        </li>
+                    ))
+                }
+                </ol>
+            </div>
+        </section>
+
+        <!-- ============ WRITING ============ -->
+        {
+            posts.length > 0 && (
+                <section id="writing" class="mx-auto max-w-6xl scroll-mt-24 px-4 pt-40 sm:px-6">
+                    <div class="flex flex-wrap items-end justify-between gap-6">
+                        <SectionHeading index="05" eyebrow="Writing" title="Latest from the blog." />
+                        <a href="/blog" class="btn-ghost group" data-reveal>
+                            All posts
+                            <Icon name="arrow-right" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </a>
+                    </div>
+                    <ul class="mt-14 border-t border-line">
+                        {posts.map((post, i) => (
+                            <li data-reveal style={`--delay: ${i * 100}ms`}>
+                                <a
+                                    href={`/blog/${post.slug}/`}
+                                    class="group relative grid grid-cols-[1fr_auto] items-center gap-6 overflow-hidden border-b border-line py-7 sm:grid-cols-[140px_1fr_auto] sm:gap-10"
+                                >
+                                    <span class="absolute inset-0 origin-bottom scale-y-0 bg-fg/[0.03] transition-transform duration-500 ease-out group-hover:scale-y-100" />
+                                    <span class="relative hidden font-mono text-xs text-muted sm:block">
+                                        <FormattedDate date={post.data.pubDate} />
+                                    </span>
+                                    <span class="relative">
+                                        <span class="block font-display text-xl font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-2 sm:text-3xl">
+                                            {post.data.title}
+                                        </span>
+                                        <span class="mt-1 block text-sm text-muted transition-transform duration-500 group-hover:translate-x-2">
+                                            {post.data.description}
+                                        </span>
+                                    </span>
+                                    <span class="relative flex items-center gap-5">
+                                        {post.data.heroImage && (
+                                            <img
+                                                src={post.data.heroImage}
+                                                alt=""
+                                                loading="lazy"
+                                                class="hidden h-16 w-28 rounded-xl object-cover opacity-0 transition-all duration-500 group-hover:opacity-100 md:block md:-translate-x-4 md:group-hover:translate-x-0"
+                                            />
+                                        )}
+                                        <span class="grid h-11 w-11 place-items-center rounded-full border border-line transition-all duration-500 group-hover:rotate-45 group-hover:border-fg group-hover:bg-fg group-hover:text-body">
+                                            <Icon name="arrow-up-right" class="h-4 w-4 -rotate-45" />
+                                        </span>
+                                    </span>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )
+        }
+
+        <!-- ============ CONTACT ============ -->
+        <section id="contact" class="mx-auto max-w-6xl scroll-mt-24 px-4 pt-40 sm:px-6">
+            <div class="relative overflow-hidden rounded-[2.5rem] p-px" data-reveal>
+                <div
+                    class="absolute inset-[-100%] animate-spin-slow"
+                    style="background: conic-gradient(from 0deg, transparent 0deg, #8b5cf6 60deg, #22d3ee 120deg, transparent 180deg, #f472b6 270deg, transparent 360deg); animation-duration: 8s"
+                    aria-hidden="true"
+                >
+                </div>
+                <div class="relative overflow-hidden rounded-[calc(2.5rem-1px)] bg-card px-6 py-20 text-center sm:px-16 sm:py-28">
+                    <div class="bg-grid absolute inset-0 opacity-70" aria-hidden="true"></div>
+                    <div
+                        class="absolute left-1/2 top-0 h-80 w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-violet/30 blur-[100px]"
+                        aria-hidden="true"
+                    >
+                    </div>
+                    <div class="relative">
+                        <p class="eyebrow">06 — Contact</p>
+                        <h2 class="mx-auto mt-6 max-w-3xl font-display text-5xl font-bold tracking-tighter sm:text-7xl">
+                            Have an idea?<br /><span class="text-gradient">Let's build it.</span>
+                        </h2>
+                        <p class="mx-auto mt-6 max-w-md text-muted">
+                            Open to interesting backend work, collaborations and good conversations. My inbox — er, DMs — are open.
+                        </p>
+                        <div class="mt-10 flex flex-wrap justify-center gap-3">
+                            {
+                                socials.map((s, i) => (
+                                    <a
+                                        href={s.href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        class={i === 0 ? "btn-primary" : "btn-ghost"}
+                                        data-magnetic="0.3"
+                                    >
+                                        <Icon name={s.icon} class="h-4 w-4" />
+                                        {s.name}
+                                    </a>
+                                ))
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 </BaseLayout>

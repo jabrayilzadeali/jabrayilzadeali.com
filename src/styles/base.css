@@ -1,15 +1,216 @@
-/* The integration's default injected base.css file */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    .dark {
-        /* For hsl(198deg 93% 60% / <alpha-value>) */
-        --color-body: 212deg 32% 8%;
-    }
+    :root,
     .light {
-        /* For hsl(198deg 93% 60% / <alpha-value>) */
-        --color-body: 0deg 0% 100%;
+        --color-body: 240deg 20% 98%;
+        --color-fg: 240deg 24% 8%;
+        --color-muted: 240deg 6% 40%;
+        --color-line: 240deg 10% 86%;
+        --color-card: 0deg 0% 100%;
+        --glow-opacity: 0.18;
+        color-scheme: light;
+    }
+    .dark {
+        --color-body: 240deg 28% 4%;
+        --color-fg: 240deg 20% 96%;
+        --color-muted: 240deg 8% 64%;
+        --color-line: 240deg 12% 16%;
+        --color-card: 240deg 22% 7%;
+        --glow-opacity: 0.35;
+        color-scheme: dark;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        @apply bg-body text-fg font-sans antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+        background: rgb(139 92 246 / 0.35);
+    }
+
+    /* Thin scrollbar */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: hsl(var(--color-line)) transparent;
+    }
+}
+
+@layer components {
+    .text-gradient {
+        @apply bg-clip-text text-transparent animate-gradient-pan;
+        background-image: linear-gradient(110deg, #a78bfa 0%, #22d3ee 30%, #f472b6 60%, #a78bfa 100%);
+        background-size: 250% 100%;
+    }
+
+    .eyebrow {
+        @apply font-mono text-xs uppercase tracking-[0.25em] text-muted;
+    }
+
+    .section-title {
+        @apply font-display text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl;
+    }
+
+    .glass {
+        @apply border border-line/70 bg-card/60 backdrop-blur-xl;
+    }
+
+    /* Mouse-following spotlight for cards. JS sets --mx / --my. */
+    .spotlight {
+        @apply relative overflow-hidden;
+        --mx: 50%;
+        --my: 50%;
+    }
+    .spotlight::before {
+        content: "";
+        @apply pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500;
+        background: radial-gradient(
+            420px circle at var(--mx) var(--my),
+            rgb(139 92 246 / var(--glow-opacity)),
+            transparent 45%
+        );
+    }
+    .spotlight:hover::before {
+        @apply opacity-100;
+    }
+
+    .btn {
+        @apply relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-[transform,box-shadow,background-color] duration-300 will-change-transform;
+    }
+    .btn-primary {
+        @apply btn bg-fg text-body shadow-[0_0_0_0_rgba(139,92,246,0)] hover:shadow-[0_0_40px_-4px_rgba(139,92,246,0.7)];
+    }
+    .btn-ghost {
+        @apply btn glass text-fg hover:bg-card;
+    }
+
+    .chip {
+        @apply inline-flex items-center rounded-full border border-line bg-card/60 px-3 py-1 font-mono text-xs text-muted transition-colors hover:border-accent-violet/60 hover:text-fg;
+    }
+}
+
+/* ---------- Scroll reveal ---------- */
+[data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
+    filter: blur(8px);
+    transition:
+        opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--delay, 0ms);
+}
+[data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+    filter: none;
+}
+
+/* Hero headline: words slide up one by one */
+.split-word {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.08em;
+}
+.split-word > span {
+    display: inline-block;
+    transform: translateY(110%);
+    animation: word-up 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay, 0ms);
+}
+@keyframes word-up {
+    to {
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay, 0ms);
+}
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Film-grain overlay */
+.grain {
+    pointer-events: none;
+    position: fixed;
+    inset: -50%;
+    z-index: 60;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 8s steps(10) infinite;
+}
+@keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-5%, 5%); }
+    40% { transform: translate(5%, -3%); }
+    60% { transform: translate(-3%, -5%); }
+    80% { transform: translate(3%, 4%); }
+}
+
+/* Background grid fading out from the top */
+.bg-grid {
+    background-image:
+        linear-gradient(to right, hsl(var(--color-line) / 0.5) 1px, transparent 1px),
+        linear-gradient(to bottom, hsl(var(--color-line) / 0.5) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 70%);
+}
+
+/* Cursor glow (desktop only) */
+.cursor-glow {
+    pointer-events: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    width: 600px;
+    height: 600px;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgb(139 92 246 / calc(var(--glow-opacity) * 0.45)), transparent 60%);
+    transform: translate3d(-50%, -50%, 0);
+    transition: opacity 0.4s;
+}
+@media (hover: none) {
+    .cursor-glow {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    [data-reveal],
+    .split-word > span,
+    .fade-in {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+    .grain,
+    .animate-marquee {
+        animation: none !important;
     }
 }

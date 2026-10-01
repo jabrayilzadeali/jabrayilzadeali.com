@@ -1,43 +1,72 @@
 ---
 import type { CollectionEntry } from "astro:content"
+import { Icon } from "astro-icon/components"
 import FormattedDate from "../components/FormattedDate.astro"
+import Tags from "../components/Tags.astro"
 import BaseLayout from "./BaseLayout.astro"
 
-type Props = CollectionEntry<"blog">["data"]
+type Props = CollectionEntry<"blog">["data"] & { minutesRead?: string }
 
-const { title, description, pubDate, updatedDate, heroImage, minutesRead } = Astro.props
+const { title, description, pubDate, updatedDate, heroImage, tags, minutesRead } = Astro.props
 ---
 
-<BaseLayout {title} {description}>
+<BaseLayout {title} {description} image={heroImage}>
     <main>
-        <article class="prose xl:prose-xl mx-auto prose-img:rounded-xl dark:prose-invert">
-            <div class="hero-stone">
-                {
-                    heroImage && (
-                        <img width={1020} height={510} src={heroImage} alt="" />
-                    )
-                }
-            </div>
-            <p>{minutesRead}</p>
-            <div>-------------------------------------</div>
-            <p></p>
-            <div>-------------------------------------</div>
-            <div class="">
-                <div class="title">
-                    <div class="date">
+        <article>
+            <header class="relative overflow-hidden pb-12 pt-36">
+                <div class="bg-grid absolute inset-0" aria-hidden="true"></div>
+                <div
+                    class="absolute left-1/2 top-0 h-[400px] w-[700px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-accent-violet/20 blur-[120px]"
+                    aria-hidden="true"
+                >
+                </div>
+                <div class="relative mx-auto max-w-3xl px-4 sm:px-6">
+                    <a href="/blog" class="fade-in group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted hover:text-fg">
+                        <Icon name="arrow-right" class="h-3.5 w-3.5 rotate-180 transition-transform duration-300 group-hover:-translate-x-1" />
+                        Blog
+                    </a>
+                    <h1 class="fade-in mt-6 text-balance font-display text-4xl font-bold leading-[1.05] tracking-tighter sm:text-6xl" style="--delay: 100ms">
+                        {title}
+                    </h1>
+                    <p class="fade-in mt-5 text-lg text-muted" style="--delay: 200ms">{description}</p>
+                    <div class="fade-in mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-muted" style="--delay: 300ms">
                         <FormattedDate date={pubDate} />
+                        {minutesRead && (<><span class="h-1 w-1 rounded-full bg-muted" /><span>{minutesRead}</span></>)}
                         {
                             updatedDate && (
-                                <div class="last-updated-on">
-                                    Last updated on{" "}
-                                    <FormattedDate date={updatedDate} />
-                                </div>
+                                <>
+                                    <span class="h-1 w-1 rounded-full bg-muted" />
+                                    <span>Updated <FormattedDate date={updatedDate} /></span>
+                                </>
                             )
                         }
                     </div>
-                    <h1>{title}</h1>
-                    <hr />
+                    <div class="fade-in mt-6" style="--delay: 400ms"><Tags tags={tags} /></div>
                 </div>
+            </header>
+
+            {
+                heroImage && (
+                    <div class="fade-in mx-auto max-w-5xl px-4 sm:px-6" style="--delay: 450ms">
+                        <img
+                            width={1020}
+                            height={510}
+                            src={heroImage}
+                            alt=""
+                            class="w-full rounded-3xl border border-line object-cover shadow-[0_30px_80px_-30px_rgba(139,92,246,0.5)]"
+                        />
+                    </div>
+                )
+            }
+
+            <div
+                class="prose prose-lg mx-auto mt-16 max-w-3xl px-4 dark:prose-invert sm:px-6
+                prose-headings:font-display prose-headings:tracking-tight
+                prose-a:text-accent-violet prose-a:underline-offset-4
+                prose-code:rounded prose-code:bg-fg/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-normal prose-code:before:content-none prose-code:after:content-none
+                prose-pre:rounded-2xl prose-pre:border prose-pre:border-line
+                prose-img:rounded-2xl prose-hr:border-line"
+            >
                 <slot />
             </div>
         </article>

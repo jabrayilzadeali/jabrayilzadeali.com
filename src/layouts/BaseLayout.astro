@@ -1,29 +1,53 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ViewTransitions } from "astro:transitions"
+import "@fontsource-variable/inter"
+import "@fontsource-variable/space-grotesk"
+import "@fontsource/jetbrains-mono/400.css"
 import BaseHead from "../components/BaseHead.astro"
 import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts"
 import "../styles/base.css"
 
-const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props
+interface Props {
+    title?: string
+    description?: string
+    image?: string
+}
+
+const { title = SITE_TITLE, description = SITE_DESCRIPTION, image } = Astro.props
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
     <head>
-        <BaseHead {title} {description} />
+        <BaseHead {title} {description} {image} />
+        <script is:inline>
+            // Apply the saved theme before first paint to avoid a flash.
+            try {
+                const theme = localStorage.getItem("theme") === "light" ? "light" : "dark"
+                document.documentElement.classList.remove("dark", "light")
+                document.documentElement.classList.add(theme)
+            } catch {}
+        </script>
         <ViewTransitions />
     </head>
-    <body class="bg-body">
-        <div class="flex flex-col h-dvh container mx-auto px-4 text-zinc-800 dark:text-gray-300">
-            <Header {title} classes="my-4" />
+    <body id="top" class="min-h-dvh overflow-x-hidden">
+        <div
+            data-progress
+            class="fixed inset-x-0 top-0 z-[70] h-[2px] origin-left scale-x-0 bg-gradient-to-r from-accent-violet via-accent-cyan to-accent-pink"
+            transition:persist
+        >
+        </div>
+        <div class="grain" aria-hidden="true" transition:persist></div>
+        <Header />
+        <div class="relative z-10 flex min-h-dvh flex-col">
             <slot />
-            <Footer classes="mt-auto my-4 pt-10" />
+            <Footer />
         </div>
     </body>
 </html>
 
 <script>
-    import "../ts/darkModeSwitcher"
+    import "../ts/site"
 </script>

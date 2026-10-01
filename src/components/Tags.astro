@@ -1,28 +1,29 @@
 ---
-const { tags } = Astro.props
-
 import { slugify, beautify } from "../ts/utils"
 
 interface Props {
     tags: string[]
+    active?: string
 }
+
+const { tags, active } = Astro.props
 ---
 
-<div class="flex flex-wrap gap-2">
+<div class="relative z-10 flex flex-wrap gap-2">
     {
-        tags.map((tag: string, index: number) => (
-            <div class="my-1">
+        tags.map(tag => {
+            const slug = slugify(tag)
+            return (
                 <a
-                    class={`px-2 text-sm py-1 ${
-                        index % 2 === 0
-                            ? "text-stone-700 dark:text-stone-300 border-gray-800"
-                            : "bg-gray-800 text-stone-300 dark:bg-gray-200 dark:text-stone-700 border-gray-800 dark:border-gray-200"
-                    }  border rounded-lg`}
-                    href={`/blog/tags/${slugify(tag)}`}
+                    href={`/blog/tags/${slug}`}
+                    class:list={[
+                        "chip",
+                        active === slug && "!border-accent-violet !bg-accent-violet/15 !text-fg",
+                    ]}
                 >
-                    #{beautify(slugify(tag))}
+                    #{beautify(slug)}
                 </a>
-            </div>
-        ))
+            )
+        })
     }
 </div>
