@@ -1,22 +1,27 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-
+import BaseLayout from "../layouts/BaseLayout.astro"
+import PageHero from "../components/PageHero.astro"
+import ProjectCard from "../components/react/ProjectCard"
+import { projects } from "../data/site"
 ---
 
-<BaseLayout>
-    <h1>Projects Here</h1>
-    <span>0</span>
-    <button data-increment class="self-start">increment</button>
+<BaseLayout title="Projects — Ali Jabrayilzade" description="Things Ali Jabrayilzade has built.">
+    <main>
+        <PageHero
+            eyebrow="Projects"
+            title="Things I've built."
+            description="A mix of production systems, side projects and experiments. Hover a card — they're alive."
+        />
+        <section class="mx-auto max-w-6xl px-4 sm:px-6">
+            <div class="grid gap-6 md:grid-cols-2">
+                {
+                    projects.map((project, i) => (
+                        <div data-reveal style={`--delay: ${(i % 2) * 120}ms`}>
+                            <ProjectCard client:visible project={project} index={i} />
+                        </div>
+                    ))
+                }
+            </div>
+        </section>
+    </main>
 </BaseLayout>
-
-<script type="module">
-    const button = document.querySelector("[data-increment]")
-    const number = document.querySelector("span")
-    
-    button.addEventListener("click", () => {
-        let num = +number.innerText
-        num += 1
-        number.innerHTML = num
-
-    })
-</script>

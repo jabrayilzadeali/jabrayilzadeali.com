@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from "astro:content"
+import FormattedDate from "./FormattedDate.astro"
+import Tags from "./Tags.astro"
+
+interface Props {
+    post: CollectionEntry<"blog">
+    delay?: number
+}
+const { post, delay = 0 } = Astro.props
+---
+
+<li data-reveal style={`--delay: ${delay}ms`}>
+    <article class="spotlight group flex h-full flex-col rounded-3xl border border-line bg-card/60 p-3 transition-all duration-500 hover:-translate-y-1 hover:border-accent-violet/40 hover:shadow-[0_20px_60px_-20px_rgba(139,92,246,0.45)]">
+        <a href={`/blog/${post.slug}/`} class="relative block overflow-hidden rounded-2xl">
+            {
+                post.data.heroImage ? (
+                    <img
+                        width={720}
+                        height={360}
+                        src={post.data.heroImage}
+                        alt=""
+                        loading="lazy"
+                        class="aspect-[2/1] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                ) : (
+                    <div class="aspect-[2/1] w-full bg-gradient-to-br from-accent-violet/40 via-accent-cyan/20 to-accent-pink/40" />
+                )
+            }
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+        </a>
+        <div class="flex flex-1 flex-col px-3 pb-3 pt-5">
+            <p class="font-mono text-xs text-muted"><FormattedDate date={post.data.pubDate} /></p>
+            <h3 class="mt-2 font-display text-xl font-semibold tracking-tight">
+                <a href={`/blog/${post.slug}/`} class="bg-gradient-to-r from-fg to-fg bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 group-hover:bg-[length:100%_1px]">
+                    {post.data.title}
+                </a>
+            </h3>
+            <p class="mt-2 line-clamp-2 text-sm text-muted">{post.data.description}</p>
+            <div class="mt-auto pt-5">
+                <Tags tags={post.data.tags} />
+            </div>
+        </div>
+    </article>
+</li>

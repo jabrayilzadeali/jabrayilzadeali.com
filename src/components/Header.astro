@@ -1,27 +1,99 @@
 ---
-import HeaderLink from './HeaderLink.astro';
-import { Icon } from 'astro-icon/components'
+import { Icon } from "astro-icon/components"
+import { navLinks, profile } from "../data/site"
 
-const { title, classes } = Astro.props
+const { pathname } = Astro.url
+const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)
 ---
 
-<header class:list={classes}>
-	<nav class="flex justify-between items-center">
-		<h2><a class="" href="/">{title}</a></h2>
-		<div class="internal-links flex items-center">
+<header
+    data-header
+    class="group/header fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 transition-[padding] duration-500 [&.is-scrolled]:pt-2"
+>
+    <nav
+        class="glass flex w-full max-w-5xl items-center justify-between rounded-full py-2 pl-2 pr-2 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.35)] transition-all duration-500 sm:pl-3"
+    >
+        <a href="/" class="group flex items-center gap-3" aria-label={`${profile.name} — home`}>
+            <span
+                class="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full bg-fg font-display text-sm font-bold text-body"
+            >
+                <span
+                    class="absolute inset-0 animate-spin-slow opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    style="background: conic-gradient(from 0deg, #8b5cf6, #22d3ee, #f472b6, #8b5cf6)"></span>
+                <span class="relative">AJ</span>
+            </span>
+            <span class="hidden font-display text-sm font-medium tracking-tight sm:inline">{profile.name}</span>
+        </a>
 
-			<HeaderLink href="/">Home</HeaderLink>
-			<Icon name="slash" width={20} height={20} />
-			<HeaderLink href="/projects">Projects</HeaderLink>
-			<Icon name="slash" width={20} height={20} />
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<Icon name="line" width={30} height={30} />
-			<!-- <Icon name="slash" width={20} height={20} /> -->
-			<button aria-label="Toggle Light And Dark Mode" data-dark-light-mode-toggle>
-				<Icon name="dark" />
-				<Icon name="light" />
-			</button>
-			<!-- <HeaderLink href="/contact">Contact</HeaderLink> -->
-		</div>
-	</nav>
+        <ul class="hidden items-center gap-1 md:flex">
+            {
+                navLinks.map(link => (
+                    <li>
+                        <a
+                            href={link.href}
+                            class:list={[
+                                "relative rounded-full px-4 py-2 text-sm transition-colors",
+                                isActive(link.href)
+                                    ? "bg-fg/10 text-fg"
+                                    : "text-muted hover:text-fg",
+                            ]}
+                            aria-current={isActive(link.href) ? "page" : undefined}
+                        >
+                            {link.label}
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+
+        <div class="flex items-center gap-1">
+            <button
+                type="button"
+                data-theme-toggle
+                aria-label="Toggle light and dark mode"
+                class="grid h-9 w-9 place-items-center rounded-full text-muted transition-all duration-300 hover:rotate-12 hover:bg-fg/10 hover:text-fg"
+            >
+                <Icon name="dark" class="h-[18px] w-[18px] dark:hidden" />
+                <Icon name="light" class="hidden h-[18px] w-[18px] dark:block" />
+            </button>
+            <a href="/#contact" class="btn-primary hidden !px-4 !py-2 sm:inline-flex">Let's talk</a>
+            <button
+                type="button"
+                data-menu-toggle
+                aria-label="Open menu"
+                aria-expanded="false"
+                class="grid h-9 w-9 place-items-center rounded-full text-fg transition-colors hover:bg-fg/10 md:hidden"
+            >
+                <Icon name="menu" class="h-5 w-5" />
+            </button>
+        </div>
+    </nav>
+
+    <div
+        data-mobile-menu
+        class="glass pointer-events-none absolute inset-x-4 top-[4.5rem] origin-top scale-95 rounded-3xl p-3 opacity-0 transition-all duration-300 md:hidden [&.is-open]:pointer-events-auto [&.is-open]:scale-100 [&.is-open]:opacity-100"
+    >
+        <ul class="flex flex-col">
+            {
+                navLinks.map(link => (
+                    <li>
+                        <a
+                            href={link.href}
+                            class:list={[
+                                "flex items-center justify-between rounded-2xl px-4 py-3 font-display text-lg",
+                                isActive(link.href) ? "bg-fg/10 text-fg" : "text-muted",
+                            ]}
+                        >
+                            {link.label}
+                            <Icon name="arrow-right" class="h-4 w-4" />
+                        </a>
+                    </li>
+                ))
+            }
+            <li>
+                <a href="/#contact" class="btn-primary mt-2 w-full">Let's talk</a>
+            </li>
+        </ul>
+    </div>
 </header>

@@ -1,58 +1,30 @@
 ---
 import { getCollection } from "astro:content"
-import FormattedDate from "../../components/FormattedDate.astro"
 import BaseLayout from "../../layouts/BaseLayout.astro"
-
+import PageHero from "../../components/PageHero.astro"
+import PostCard from "../../components/PostCard.astro"
 import Tags from "../../components/Tags.astro"
 import { slugify } from "../../ts/utils"
 
-const posts = (await getCollection("blog")).sort(
-    (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
-)
+const posts = (await getCollection("blog")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 
-const uniqueTags: string[] = [
-    ...new Set(posts.flatMap(article => article.data.tags.map(tag => slugify(tag)))),
-]
-// console.log(uniqueTags)
-
-// let tag_param = Astro.url.searchParams.get('tag')! || ""
-// console.log("---------------------the tag param: ", tag_param)
-
-// const filtered_posts = tag_param !== "" ? posts.filter(post => post.data.tags.includes(tag_param)): posts
-
-// console.log(posts)
-// console.log(new_posts)
+const uniqueTags = [...new Set(posts.flatMap(post => post.data.tags.map(tag => slugify(tag))))]
 ---
 
-<BaseLayout>
+<BaseLayout title="Blog — Ali Jabrayilzade" description="Writing about backend development, systems and the web.">
     <main>
-        <section>
-            <div class="my-10">
-        <Tags tags={uniqueTags} />
-        </div>
-            <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {
-                    posts.map(post => (
-                        <li class="">
-                            <a href={`/blog/${post.slug}/`}>
-                                <img
-                                    width={720}
-                                    height={360}
-                                    src={post.data.heroImage}
-                                    class="rounded-xl"
-                                    alt=""
-                                />
-                                <h4 class="pt-4 text-xl font-bold">
-                                    {post.data.title}
-                                </h4>
-                            </a>
-                            <p class="date pt-1 text-sm mb-2">
-                                <FormattedDate date={post.data.pubDate} />
-                            </p>
-                            <Tags tags={post.data.tags} />
-                        </li>
-                    ))
-                }
+        <PageHero
+            eyebrow="Blog"
+            title="Notes from the backend."
+            description="Writing about systems, code and whatever I'm learning right now."
+        >
+            <div class="fade-in mt-10" style="--delay: 650ms">
+                <Tags tags={uniqueTags} />
+            </div>
+        </PageHero>
+        <section class="mx-auto max-w-6xl px-4 sm:px-6">
+            <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {posts.map((post, i) => <PostCard post={post} delay={(i % 3) * 100} />)}
             </ul>
         </section>
     </main>
