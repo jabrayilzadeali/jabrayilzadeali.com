@@ -25,9 +25,4 @@ export default defineConfig({
         icon(),
         react(),
     ],
-    vite: {
-        ssr: {
-            noExternal: ["@react-three/drei"],
-        },
-    },
 })

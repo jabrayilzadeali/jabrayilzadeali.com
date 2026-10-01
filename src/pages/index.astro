@@ -200,7 +200,7 @@ const marquee = [...skills, ...skills]
                 <div class="order-2 lg:order-1" data-reveal>
                     <div class="relative mx-auto max-w-[520px]">
                         <div class="absolute inset-[15%] rounded-full bg-accent-cyan/10 blur-3xl" aria-hidden="true"></div>
-                        <SkillSphere client:visible skills={skills} />
+                        <SkillSphere client:only="react" skills={skills} />
                     </div>
                 </div>
                 <div class="order-1 lg:order-2">
